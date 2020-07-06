@@ -1,6 +1,6 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import babel from 'rollup-plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import babel from '@rollup/plugin-babel';
 import { terser } from "rollup-plugin-terser";
 
 import pkg from './package.json';
@@ -18,8 +18,8 @@ export default [
 		plugins: [
 			resolve(), // so Rollup can find npm modules
 			commonjs(), // so Rollup can convert cjs to an ES module
-			babel(),
-			terser()
+			babel({ babelHelpers: 'bundled' }),
+			terser({ output: { comments: false } })
 		],
 		watch: {
 			include: "src/**",
@@ -28,16 +28,14 @@ export default [
 	},
 	{
 		input: 'src/index.js',
-		output: [
-			{
-				file: pkg.module,
-				format: 'es',
-				plugins: [
-					resolve(),
-					commonjs(),
-					terser()
-				],
-			}
+		output: {
+			file: pkg.module,
+			format: 'es'
+		},
+		plugins: [
+			resolve(),
+			commonjs(),
+			terser({ output: { comments: false } })
 		],
 		external: ['sticky-sidebar']
 	}
