@@ -1,3 +1,4 @@
+import isEqual from "lodash.isequal";
 import StickySidebar from "sticky-sidebar";
 
 const VueStickyDirective = () => {
@@ -108,9 +109,11 @@ const VueStickyDirective = () => {
       }
     },
     update(el, binding, vnode) {
-      if (binding.value === binding.oldValue) return;
-      el[NS].options = mergeOptions(el[NS].options, binding.value);
-      el[NS].updateSticky();
+      vnode.context.$nextTick(() => {
+        if (isEqual(binding.value, binding.oldValue)) return;
+        el[NS].options = mergeOptions(el[NS].options, binding.value);
+        el[NS].updateSticky();
+      });
     },
     componentUpdated(el, binding, vnode) {
       if (el[NS]) {
